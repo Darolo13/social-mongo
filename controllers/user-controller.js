@@ -29,6 +29,19 @@ const userController = {
             console.log(err);
             res.sendStatus(400);
         });
+    },
+
+    // post a new user
+    createUser({ body }, res) {
+        User.create(body)
+        .then(dbUserData => {
+            if (!dbUserData) {
+                res.status(404).json({ message: 'No user with this id!' });
+                return;
+            }
+            res.json(dbUserData);
+        })
+        .catch(err => res.json(err));
     }
 };
 
