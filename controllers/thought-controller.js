@@ -87,15 +87,26 @@ const thoughtController = {
             { _id: params.id }, body,
             { new: true, runValidators: true }
         )
-        .then(uThought => {
-            if (!uThought) {
+        .then(updThought => {
+            if (!updThought) {
                 return res.status(404).json({ message: 'No thought with this id!' });
             }
-            res.json(uThought);
+            res.json(updThought);
+        })
+        .catch(err => res.json(err));
+    },
+
+    // Remove thoughts by id
+    deleteThought({ params, body }, res) {
+        Thought.findOneAndDelete({ _id: params.id })
+        .then(delThought => {
+            if (!delThought) {
+                return res.status(404).json({ message: 'No thought with this id!' });
+            }
+            res.json(delThought);
         })
         .catch(err => res.json(err));
     }
-
 };
 
 module.exports = thoughtController;
