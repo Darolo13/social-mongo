@@ -3,7 +3,10 @@ const router = require('express').Router();
 const {
     getAllUsers,
     getUserById,
-    createUser
+    createUser,
+    addFriend,
+    updateUser,
+    deleteUser
 } = require('../../controllers/user-controller');
 
 // /api/users
@@ -16,5 +19,12 @@ router
 router
     .route('/:id')
     .get(getUserById)
+    .put(updateUser)
+    .delete(deleteUser)
+
+// /api/users/:userId/friends/:friendId
+router
+    .route('/:userId/friends/:friendId')
+    .post(addFriend)
 
 module.exports = router;
