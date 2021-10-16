@@ -3,7 +3,7 @@ const { User } = require('../models');
 const userController = {
     // get all users
     getAllUsers(req, res) {
-        User.find()
+        User.find({})
         .populate({
             path: 'thoughts',
             select: '-__v'
@@ -12,7 +12,7 @@ const userController = {
         .then(dbUserData => res.json(dbUserData))
         .catch(err => {
             console.log(err);
-            res.sendStatus(400);
+            res.status(500).json(err)
         });
     },
 
@@ -23,20 +23,38 @@ const userController = {
             path: 'thoughts',
             select: '-__v'
         })
+        .populate({
+            path: 'friends',
+            select: '-__v'
+        })
         .select('-_v')
         .then(dbUserData => res.json(dbUserData))
         .catch(err => {
             console.log(err);
-            res.sendStatus(400);
+            res.status(500).json(err)
         });
     },
 
     // post a new user
     createUser({ body }, res) {
         User.create(body)
+        .then(dbUserData => res.json(dbUserData))
+        .catch(err => {
+            console.log(err);
+            res.status(500).json(err)
+        });
+    },
+
+    // POST to add a new friend to a user's friend list
+    addFriend({ params }, res) {
+        User.findOneAndUpdate(
+            { _id: params.userId },
+            { $push: { friends: params.friendId } },
+            { new: true, runValidators: true}
+        )
         .then(dbUserData => {
             if (!dbUserData) {
-                res.status(404).json({ message: 'No user with this id!' });
+                res.status(404).json({ message: 'No user found with this id!' });
                 return;
             }
             res.json(dbUserData);
