@@ -14,20 +14,16 @@ const {
 router
     .route('/')
     .get(getAllThoughts)
-
-
-// /api/thoughts/:thoughtId
-router
-    .route('/userId')
     .post(createThought)
 
 // /api/thoughts/:id
 router
-    .route('/:thoughtId')
+    .route('/:id')
     .get(getThoughtById)
     .put(updateThought)
     .delete(deleteThought)
 
+// /api/thoughts/:thoughtId/reactions
 router
     .route('/:thoughtId/reactions')
     .post(addReaction)
